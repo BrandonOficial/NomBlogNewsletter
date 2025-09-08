@@ -18,8 +18,7 @@ Um blog moderno e responsivo desenvolvido com Next.js 15, TypeScript e Tailwind 
 - **TypeScript** - Tipagem estática para JavaScript com interfaces robustas
 - **Tailwind CSS** - Framework CSS utilitário para estilização responsiva
 - **shadcn/ui** - Componentes UI modernos, acessíveis e customizáveis
-- **Supabase** - Banco de dados PostgreSQL para armazenamento de emails e dados
-- **Resend** - Serviço de envio de emails transacional
+- **Supabase** - Banco de dados PostgreSQL para armazenamento de dados
 - **Jest** - Framework de testes unitários
 - **React Hook Form** - Gerenciamento de formulários
 - **Zod** - Validação de schemas TypeScript
@@ -38,9 +37,9 @@ Um blog moderno e responsivo desenvolvido com Next.js 15, TypeScript e Tailwind 
 
 - 📧 Sistema de newsletter integrado com validação
 - 🔐 Armazenamento seguro de emails no Supabase
-- 📨 Envio de emails através do Resend
 - ✅ Validação de email com Zod
 - 📊 Gestão de inscrições e desinscrições
+- 📝 Log de inscrições para acompanhamento
 
 ### 🔧 Desenvolvimento
 
@@ -111,10 +110,9 @@ material-blog/
 
 ### Pré-requisitos
 
-- Node.js 18+
+- Node.js 18+ 
 - npm ou yarn
 - Conta no Supabase
-- Conta no Resend
 
 ### Variáveis de Ambiente
 
@@ -124,9 +122,6 @@ Crie um arquivo `.env.local` na raiz do projeto com as seguintes variáveis:
 # Supabase Configuration
 NEXT_PUBLIC_SUPABASE_URL=sua_url_do_supabase
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
-
-# Resend Configuration
-RESEND_API_KEY=sua_chave_api_do_resend
 
 # Optional: Development
 NODE_ENV=development
@@ -138,32 +133,26 @@ NODE_ENV=development
 2. Execute o script SQL fornecido em `supabase-migration.sql`
 3. Copie a URL e a chave anônima para o arquivo `.env.local`
 
-### Configuração do Resend
-
-1. Crie uma conta no [Resend](https://resend.com)
-2. Gere uma API key
-3. Adicione a chave ao arquivo `.env.local`
-
 ## 📧 Newsletter
 
-O sistema de newsletter é uma funcionalidade central do projeto, permitindo que os usuários se inscrevam para receber atualizações por email.
+O sistema de newsletter é uma funcionalidade central do projeto, permitindo que os usuários se inscrevam para receber atualizações. Os emails são armazenados no Supabase para futuras campanhas.
 
 ### Funcionalidades da Newsletter:
 
 - ✅ **Inscrição segura** com validação de email
 - ✅ **Armazenamento no Supabase** com RLS (Row Level Security)
-- ✅ **Envio via Resend** com templates personalizados
 - ✅ **Validação com Zod** para garantir dados válidos
 - ✅ **Tratamento de erros** robusto
 - ✅ **Feedback visual** para o usuário
+- ✅ **Log de inscrições** para acompanhamento
 
 ### Como funciona:
 
 1. Usuário preenche o formulário de inscrição
 2. Email é validado usando Zod
 3. Dados são salvos no Supabase com RLS
-4. Confirmação é enviada via Resend
-5. Usuário recebe feedback de sucesso/erro
+4. Usuário recebe feedback de sucesso/erro
+5. Inscrição é registrada nos logs do sistema
 
 ## 🧪 Testes
 

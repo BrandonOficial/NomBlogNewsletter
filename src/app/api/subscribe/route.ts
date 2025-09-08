@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { NewsletterService } from "@/lib/newsletter-service";
 import { newsletterSubscriptionSchema } from "@/lib/validators";
-import { sendEmailWithResend } from "@/lib/email";
 
 /**
  * Handler para inscrição na newsletter
@@ -55,28 +54,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Envia email de confirmação
-    try {
-      await sendEmailWithResend({
-        to: email,
-        subject: "Bem-vindo à nossa Newsletter!",
-        html: `
-          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-            <h2 style="color: #333;">🎉 Inscrição Confirmada!</h2>
-            <p>Olá! Sua inscrição na nossa newsletter foi realizada com sucesso.</p>
-            <p>A partir de agora você receberá nossas atualizações e conteúdos exclusivos.</p>
-            <p>Obrigado por se juntar a nós!</p>
-            <hr style="margin: 20px 0;">
-            <p style="font-size: 12px; color: #666;">
-              Se você não solicitou esta inscrição, pode ignorar este email.
-            </p>
-          </div>
-        `,
-      });
-    } catch (emailError) {
-      console.error("Erro ao enviar email de confirmação:", emailError);
-      // Não falha a inscrição se o email não puder ser enviado
-    }
+    // Log da inscrição (sem envio de email)
+    console.log(`Nova inscrição na newsletter: ${email} (fonte: ${source})`);
 
     return NextResponse.json(
       {
