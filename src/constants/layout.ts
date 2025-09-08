@@ -1,12 +1,12 @@
 export const LAYOUT_CONSTANTS = {
   LOGO: {
-    width: 160,
-    height: 32,
+    width: 220,
+    height: 40,
     alt: "Logotipo Nom",
   },
   CONTAINER: {
     maxWidth: "max-w-[1920px]",
-    padding: "px-6 sm:px-6 lg:px-8 2xl:px-16",
+    padding: "px-4 sm:px-6 lg:px-8 2xl:px-16",
   },
   COLORS: {
     brand: "#ffcc00",

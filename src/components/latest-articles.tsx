@@ -1,90 +1,229 @@
 import Link from "next/link";
 import Image from "next/image";
+import { ARTIGOS, Artigo } from "@/constants/articles";
+import { RelativeTime } from "@/components/RelativeTime";
+import { SpacingConfig } from "@/types/components";
 
-const articles = [
-  {
-    id: 1,
-    title: "How to optimize your react components performance ⚡",
-    author: "soufianealc",
-    date: "March 23, 2023",
-    readTime: "4 minutes read",
-    gradient: "from-blue-400 to-purple-500",
-    image: "/1.png",
-  },
-  {
-    id: 2,
-    title: "5 tips to learn programming — as a beginner.",
-    author: "soufianealc",
-    date: "August 25, 2022",
-    readTime: "2 minutes read",
-    gradient: "from-green-400 to-cyan-500",
-    image: "/2.png",
-  },
-  {
-    id: 3,
-    title: "Understanding async/await in JavaScript",
-    author: "soufianealc",
-    date: "April 15, 2023",
-    readTime: "5 minutes read",
-    gradient: "from-yellow-400 to-orange-500",
-    image: "/3.png",
-  },
-  {
-    id: 4,
-    title: "Mastering CSS Grid Layout",
-    author: "cssmaster",
-    date: "May 5, 2023",
-    readTime: "6 minutes read",
-    gradient: "from-pink-400 to-red-500",
-    image: "/4.png",
-  },
-];
+/**
+ * Callbacks para eventos de artigo compatíveis com o tipo Artigo
+ */
+interface ArticleCallbacks {
+  /** Chamado quando um artigo é clicado */
+  onArticleClick?: (article: Artigo) => void;
+  /** Chamado quando um artigo é visualizado */
+  onArticleView?: (article: Artigo) => void;
+  /** Chamado quando um artigo é favoritado */
+  onArticleFavorite?: (article: Artigo) => void;
+}
 
-export default function LatestArticles() {
+/**
+ * Props para o componente ArticleCard
+ */
+interface ArticleCardProps {
+  /** Dados do artigo */
+  article: Artigo;
+  /** Classes CSS adicionais */
+  className?: string;
+  /** Callback quando o artigo é clicado */
+  onArticleClick?: (article: Artigo) => void;
+  /** Callback quando o artigo é visualizado */
+  onArticleView?: (article: Artigo) => void;
+}
+
+/**
+ * Componente responsável apenas por renderizar um card de artigo.
+ * Aplica Single Responsibility Principle.
+ */
+const ArticleCard = ({
+  article,
+  className = "",
+  onArticleClick,
+  onArticleView,
+}: ArticleCardProps): JSX.Element => {
+  const handleClick = (): void => {
+    onArticleClick?.(article);
+  };
+
+  const handleView = (): void => {
+    onArticleView?.(article);
+  };
+
   return (
-    <section className="px-4 py-12 md:px-6 lg:px-8 2xl:px-16 max-w-[1920px] mx-auto w-full">
-      <h2 className="text-2xl sm:text-3xl md:text-4xl xl:text-5xl font-bold tracking-tight mb-6 sm:mb-8 md:mb-10 xl:mb-12">
-        Ultimos Artigos
-      </h2>
-      <div className="grid gap-6 sm:gap-8 xl:gap-10 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {articles.map((article, index) => (
-          <Link
-            key={index}
-            href={`/article/${article.id}`}
-            className="group block"
-          >
-            <article className="h-full overflow-hidden rounded-xl bg-white shadow-sm transition-all hover:shadow-md">
-              <div
-                className={`relative h-48 sm:h-56 xl:h-64 w-full overflow-hidden bg-gradient-to-r ${article.gradient}`}
-              >
-                <Image
-                  src={article.image}
-                  alt={article.title}
-                  fill
-                  className="transition-transform duration-300 group-hover:scale-105"
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-              <div className="p-4 sm:p-6 xl:p-8">
-                <div className="mb-3 sm:mb-4 flex items-center gap-2">
-                  <div className="h-6 w-6 rounded-full bg-gray-200" />
-                  <span className="text-sm xl:text-base text-gray-600">
-                    {article.author}
-                  </span>
-                </div>
-                <h3 className="mb-2 text-lg sm:text-xl xl:text-2xl font-semibold tracking-tight text-gray-900 group-hover:text-gray-600 line-clamp-2">
-                  {article.title}
-                </h3>
-                <div className="mt-3 sm:mt-4 flex items-center gap-4 text-sm xl:text-base text-gray-600">
-                  <span>{article.date}</span>
-                  <span className="hidden sm:inline">•</span>
-                  <span>{article.readTime}</span>
-                </div>
-              </div>
-            </article>
-          </Link>
-        ))}
+    <Link
+      href={`/article/${article.id}`}
+      className={`group block ${className}`}
+      onClick={handleClick}
+      onMouseEnter={handleView}
+    >
+      <article className="h-full overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+        <div
+          className={`relative h-48 sm:h-52 md:h-56 lg:h-60 xl:h-64 w-full overflow-hidden bg-gradient-to-r ${article.gradient}`}
+        >
+          <Image
+            src={article.image}
+            alt={article.title}
+            fill
+            className="transition-transform duration-500 group-hover:scale-110"
+            style={{ objectFit: "cover" }}
+          />
+        </div>
+        <div className="p-4 sm:p-5 md:p-6 xl:p-8">
+          <ArticleAuthor author={article.author} />
+          <ArticleTitle title={article.title} />
+          <ArticleMetadata date={article.date} readTime={article.readTime} />
+        </div>
+      </article>
+    </Link>
+  );
+};
+
+/**
+ * Componente responsável apenas por renderizar o autor do artigo
+ */
+const ArticleAuthor = ({ author }: { author: string }): JSX.Element => (
+  <div className="mb-3 sm:mb-4 flex items-center gap-2">
+    <div className="h-6 w-6 rounded-full bg-gray-200" />
+    <span className="text-sm md:text-base text-gray-600 font-medium">
+      {author}
+    </span>
+  </div>
+);
+
+/**
+ * Componente responsável apenas por renderizar o título do artigo
+ */
+const ArticleTitle = ({ title }: { title: string }): JSX.Element => (
+  <h3 className="mb-2 text-lg sm:text-xl md:text-xl xl:text-2xl font-semibold tracking-tight text-gray-900 group-hover:text-gray-600 line-clamp-2 leading-tight">
+    {title}
+  </h3>
+);
+
+/**
+ * Componente responsável apenas por renderizar os metadados do artigo
+ */
+const ArticleMetadata = ({
+  date,
+  readTime,
+}: {
+  date: string;
+  readTime: string;
+}): JSX.Element => (
+  <div className="mt-3 sm:mt-4 flex items-center gap-4 text-sm md:text-base text-gray-600">
+    <RelativeTime date={date} />
+    <span className="hidden sm:inline">•</span>
+    <span>{readTime}</span>
+  </div>
+);
+
+/**
+ * Props para o componente ArticleGrid
+ */
+interface ArticleGridProps {
+  /** Lista de artigos para renderizar */
+  articles: readonly Artigo[];
+  /** Callbacks para eventos de artigo */
+  callbacks?: ArticleCallbacks;
+  /** Classes CSS adicionais */
+  className?: string;
+}
+
+/**
+ * Componente responsável apenas por renderizar o grid de artigos.
+ * Layout responsivo otimizado: 1 coluna (mobile) → 2 colunas (tablet) → 3 colunas (desktop) → 4 colunas (telas grandes)
+ */
+const ArticleGrid = ({
+  articles,
+  callbacks,
+  className = "",
+}: ArticleGridProps): JSX.Element => {
+  return (
+    <div
+      className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10 xl:gap-12 ${className}`}
+    >
+      {articles.map((article: Artigo) => (
+        <ArticleCard
+          key={article.id}
+          article={article}
+          onArticleClick={callbacks?.onArticleClick}
+          onArticleView={callbacks?.onArticleView}
+        />
+      ))}
+    </div>
+  );
+};
+
+/**
+ * Props para o componente LatestArticlesSection
+ */
+interface LatestArticlesSectionProps {
+  /** Lista de artigos para exibir */
+  articles?: readonly Artigo[];
+  /** Título da seção */
+  title?: string;
+  /** Callbacks para eventos de artigo */
+  callbacks?: ArticleCallbacks;
+  /** Classes CSS adicionais */
+  className?: string;
+  /** Configurações de espaçamento */
+  spacing?: SpacingConfig;
+}
+
+/**
+ * Componente principal que orquestra a seção de artigos.
+ * Aplica Dependency Inversion recebendo dados externos.
+ * Layout totalmente responsivo com breakpoints otimizados:
+ * - Mobile (< 640px): 1 coluna
+ * - Tablet (640px - 1023px): 2 colunas
+ * - Desktop (1024px - 1279px): 3 colunas
+ * - Large Desktop (≥ 1280px): 4 colunas
+ */
+export default function LatestArticlesSection({
+  articles = ARTIGOS,
+  title = "Últimos Artigos",
+  callbacks,
+  className = "",
+  spacing = {},
+}: LatestArticlesSectionProps): JSX.Element {
+  const {
+    padding = "py-12 sm:py-16 lg:py-20 xl:py-24",
+    margin = "px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16",
+  } = spacing;
+
+  /**
+   * Handler para clique no artigo
+   */
+  const handleArticleClick = (article: Artigo): void => {
+    // Analytics ou tracking personalizado
+    console.log(`Artigo clicado na página inicial: ${article.title}`);
+    callbacks?.onArticleClick?.(article);
+  };
+
+  /**
+   * Handler para visualização do artigo
+   */
+  const handleArticleView = (article: Artigo): void => {
+    // Analytics ou tracking de visualização
+    console.log(`Artigo visualizado: ${article.title}`);
+    callbacks?.onArticleView?.(article);
+  };
+
+  const articleCallbacks: ArticleCallbacks = {
+    onArticleClick: handleArticleClick,
+    onArticleView: handleArticleView,
+    ...callbacks,
+  };
+
+  return (
+    <section
+      className={`${margin} ${padding} max-w-[1920px] mx-auto w-full ${className} mt-7`}
+    >
+      <div className="mb-8 sm:mb-10 lg:mb-12 xl:mb-16">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tight text-gray-900">
+          {title}
+        </h2>
       </div>
+
+      <ArticleGrid articles={articles} callbacks={articleCallbacks} />
     </section>
   );
 }

@@ -1,15 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
-import Link from "next/link";
-import Image from "next/image";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/layout/Header";
 
-export default function PrivacyPolicy() {
+/**
+ * Página de Política de Privacidade.
+ */
+const PrivacyPolicy = (): JSX.Element => {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      {/* Main Content */}
       <main className="flex-1">
         <div className="container mx-auto px-4 py-8 max-w-4xl">
           <Card className="bg-white">
@@ -148,8 +148,9 @@ export default function PrivacyPolicy() {
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
-}
+};
+
+export default PrivacyPolicy;

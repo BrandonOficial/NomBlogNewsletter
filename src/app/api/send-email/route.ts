@@ -1,7 +1,15 @@
-import { EmailTemplate } from "@/components/EmailTemplate";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+/**
+ * Instância do cliente Resend para envio de emails.
+ * A chave de API deve estar definida nas variáveis de ambiente.
+ */
+const resendApiKey = process.env.RESEND_API_KEY;
+if (!resendApiKey) {
+  throw new Error("RESEND_API_KEY não encontrada nas variáveis de ambiente");
+}
+
+const resend = new Resend(resendApiKey);
 
 export async function POST() {
   try {
@@ -9,7 +17,7 @@ export async function POST() {
       from: "Acme <onboarding@resend.dev>",
       to: ["delivered@resend.dev"],
       subject: "Hello world",
-      react: EmailTemplate({ firstName: "John" }),
+      html: "<h1>Hello World</h1><p>This is a test email.</p>",
     });
 
     if (error) {
