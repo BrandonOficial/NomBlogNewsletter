@@ -2,25 +2,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import Link from "next/link";
 import Image from "next/image";
 import { Footer } from "@/components/footer";
+import { Header } from "@/components/layout/Header";
 
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="border-b sticky top-0 bg-white/80 backdrop-blur-sm z-50">
-        <div className="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 2xl:px-16 h-16 flex items-center justify-between">
-          <Link href="/" className="text-lg font-medium">
-            <Image
-              src="/LogoTipos.svg"
-              alt="Logotipo Nom"
-              width={140}
-              height={32}
-              priority
-            />
-          </Link>
-          {/* Mobile menu button */}
-        </div>
-      </header>
+      <Header />
 
       {/* Main Content */}
       <main className="flex-1">
