@@ -1,5 +1,3 @@
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/layout/Header";
@@ -31,8 +29,8 @@ const ArticleContent = ({ content }: { content: ArtigoContent }) => {
             content.level === 2
               ? "text-2xl mt-8"
               : content.level === 3
-                ? "text-xl mt-6"
-                : "text-lg mt-4"
+              ? "text-xl mt-6"
+              : "text-lg mt-4"
           }`}
         >
           {content.text}
@@ -100,7 +98,9 @@ const ArticleContent = ({ content }: { content: ArtigoContent }) => {
       const ListTag = content.ordered ? "ol" : "ul";
       return (
         <ListTag
-          className={`mb-6 ml-6 space-y-2 ${content.ordered ? "list-decimal" : "list-disc"}`}
+          className={`mb-6 ml-6 space-y-2 ${
+            content.ordered ? "list-decimal" : "list-disc"
+          }`}
         >
           {content.items!.map((item: string, index: number) => (
             <li key={index} className="text-gray-700 leading-relaxed">

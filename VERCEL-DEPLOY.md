@@ -30,12 +30,14 @@ Este guia irá ajudá-lo a fazer o deploy do projeto NomBlogNewsletter na Vercel
 #### Opção 1: Deploy via GitHub (Recomendado)
 
 1. **Conecte o repositório:**
+
    - Acesse [vercel.com](https://vercel.com)
    - Clique em "New Project"
    - Conecte sua conta do GitHub
    - Selecione o repositório `NomBlogNewsletter`
 
 2. **Configure as variáveis de ambiente:**
+
    - Na tela de configuração do projeto, vá em **Environment Variables**
    - Adicione as seguintes variáveis:
 
@@ -50,6 +52,7 @@ Este guia irá ajudá-lo a fazer o deploy do projeto NomBlogNewsletter na Vercel
    ```
 
 3. **Configure o domínio de email do Resend:**
+
    - No Resend, vá em **Domains**
    - Adicione seu domínio ou use o domínio padrão `resend.dev`
    - Atualize a variável `RESEND_FROM_EMAIL` com o domínio verificado
@@ -89,6 +92,7 @@ Este guia irá ajudá-lo a fazer o deploy do projeto NomBlogNewsletter na Vercel
 ## 🗄️ Configuração do Banco de Dados
 
 1. **Execute a migração do Supabase:**
+
    - Acesse o SQL Editor no Supabase
    - Execute o script em `supabase-migration.sql`
    - Isso criará a tabela `newsletter_subscriptions` com RLS
@@ -102,10 +106,12 @@ Este guia irá ajudá-lo a fazer o deploy do projeto NomBlogNewsletter na Vercel
 Após o deploy, verifique se:
 
 1. **O site está funcionando:**
+
    - Acesse a URL fornecida pela Vercel
    - Teste a navegação entre páginas
 
 2. **A newsletter está funcionando:**
+
    - Teste o formulário de inscrição
    - Verifique se o email é salvo no Supabase
    - Confirme se o email de confirmação é enviado
@@ -149,10 +155,12 @@ Após o deploy, verifique se:
 ## 📊 Monitoramento
 
 1. **Logs da Vercel:**
+
    - Acesse o dashboard da Vercel
    - Vá em "Functions" para ver os logs das APIs
 
 2. **Logs do Supabase:**
+
    - Acesse o dashboard do Supabase
    - Vá em "Logs" para ver as consultas ao banco
 

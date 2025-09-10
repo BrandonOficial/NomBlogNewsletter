@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { NewsletterService } from "@/lib/newsletter-service";
 import { newsletterSubscriptionSchema } from "@/lib/validators";
+import { supabase, type NewsletterSubscription } from "@/lib/supabase";
 
 /**
  * Handler para inscrição na newsletter
@@ -25,10 +25,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     const { email, source } = validationResult.data;
 
-    // Verifica se o email já está inscrito
-    const isAlreadySubscribed =
-      await NewsletterService.isEmailSubscribed(email);
-    if (isAlreadySubscribed) {
+    // Verifica duplicidade
+    const { data: existing, error: checkError } = await supabase
+      .from("newsletter_subscriptions")
+      .select("id")
+      .eq("email", email.toLowerCase().trim())
+      .eq("status", "active")
+      .single();
+
+    if (checkError && checkError.code !== "PGRST116") {
+      throw checkError;
+    }
+
+    if (existing) {
       return NextResponse.json(
         {
           success: false,
@@ -38,30 +47,37 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       );
     }
 
-    // Cria a inscrição no banco de dados
-    const subscriptionResult = await NewsletterService.createSubscription({
-      email,
-      source,
-    });
+    // Insere diretamente no Supabase
+    const { data: subscription, error: insertError } = await supabase
+      .from("newsletter_subscriptions")
+      .insert({
+        email: email.toLowerCase().trim(),
+        source: source ?? "website",
+        status: "active",
+      })
+      .select()
+      .single<NewsletterSubscription>();
 
-    if (!subscriptionResult.success) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: subscriptionResult.error || "Erro ao criar inscrição",
-        },
-        { status: 500 }
-      );
+    if (insertError) {
+      if ((insertError as any).code === "23505") {
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Este email já está inscrito na newsletter",
+          },
+          { status: 409 }
+        );
+      }
+      throw insertError;
     }
 
-    // Log da inscrição (sem envio de email)
     console.log(`Nova inscrição na newsletter: ${email} (fonte: ${source})`);
 
     return NextResponse.json(
       {
         success: true,
         message: "Inscrição realizada com sucesso!",
-        data: subscriptionResult.data,
+        data: subscription,
       },
       { status: 201 }
     );
@@ -71,36 +87,6 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       {
         success: false,
         error: "Erro interno do servidor",
-      },
-      { status: 500 }
-    );
-  }
-}
-
-/**
- * Handler para listar inscrições (apenas para desenvolvimento)
- */
-export async function GET(): Promise<NextResponse> {
-  // Em produção, esta rota deveria ser protegida
-  if (process.env.NODE_ENV === "production") {
-    return NextResponse.json(
-      { success: false, error: "Método não permitido" },
-      { status: 405 }
-    );
-  }
-
-  try {
-    const subscriptions = await NewsletterService.getActiveSubscriptions();
-    return NextResponse.json({
-      success: true,
-      data: subscriptions,
-    });
-  } catch (error) {
-    console.error("Erro ao buscar inscrições:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Erro ao buscar inscrições",
       },
       { status: 500 }
     );

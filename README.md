@@ -110,7 +110,7 @@ material-blog/
 
 ### Pré-requisitos
 
-- Node.js 18+ 
+- Node.js 18+
 - npm ou yarn
 - Conta no Supabase
 
