@@ -9,7 +9,7 @@ import { Footer } from "@/components/footer";
  * Conteúdo configurável para a seção hero
  */
 const heroContent = {
-  title: "Blog de Tecnologia\nMaterial Tailwind",
+  title: "Blog de Tecnologia\nMaterial Didático ",
   subtitle:
     "Amplie seu conhecimento com os conteúdos mais recentes sobre tecnologia e fique por dentro das inovações do mercado em nossos artigos",
   ctaText: "Explorar Artigos",
@@ -32,11 +32,6 @@ const articleCallbacks = {
     // Analytics de visualização
   },
 };
-
-/**
- * Configuração do grid de artigos
- */
-
 /**
  * Página inicial do blog.
  * Responsável por compor o layout principal com cabeçalho, hero e artigos.
